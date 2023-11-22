@@ -51,17 +51,6 @@ cartSchema.methods.calculateTotals = function () {
   cart.totalPrice = totalPrice;
 };
 
-// cartSchema.methods.getAllUserByProductId = function (productId) {
-//   const cart = this;
-//   let userIds = [];
-//   cart.items.forEach((item) => {
-//     if (item.productId.toString() === productId.toString()) {
-//       userIds.push(cart.userId);
-//     }
-//   });
-//   return userIds;
-// };
-
 const Cart = mongoose.model("Cart", cartSchema);
 
 module.exports = Cart;

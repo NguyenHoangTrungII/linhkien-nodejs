@@ -115,14 +115,12 @@ const productController = {
       let products;
 
       if (less && less.toLowerCase() === "true") {
-        // Nếu less được đặt và là 'true', chỉ lấy tối đa 10 sản phẩm
         products = await Product.find({
           name: { $regex: productName, $options: "i" },
         })
           .limit(2)
           .populate("category", "name");
       } else {
-        // Nếu không có hoặc không là 'true', lấy tất cả sản phẩm
         products = await Product.find({
           name: { $regex: productName, $options: "i" },
         }).populate("category", "name");
@@ -140,61 +138,6 @@ const productController = {
       res.status(200).json(response);
     } catch (error) {
       res.status(400).json({ error: error.message });
-    }
-  },
-
-  //UPDATE DISCOUNT
-  UpdateDiscountPriceById: async (req, res) => {
-    const _id = req.params.id;
-    const updates = Object.keys(req.body);
-    const allowedUpdates = ["gia"];
-    const isValidOperation = updates.every((update) =>
-      allowedUpdates.includes(update)
-    );
-
-    if (!isValidOperation) {
-      return res.status(400).json({ error: "Invalid updates!" });
-    }
-
-    try {
-      const product = await Product.findById(_id);
-      if (!product) {
-        return res.status(404).json({ error: "Product does not exist" });
-      }
-
-      const oldPrice = product.gia;
-      const newPrice = req.body.gia;
-
-      product.gia = newPrice;
-      await product.save();
-
-      if (newPrice < oldPrice) {
-        // Nếu giá mới nhỏ hơn giá cũ
-
-        orders.forEach((order) => {
-          order.products.forEach((prod) => {
-            if (
-              prod.productId.toString() === _id.toString() ||
-              prod.category === product.danhmuc
-            ) {
-              customersToUpdate.push(order.customerId);
-            }
-          });
-        });
-
-        // Gửi thông báo tới khách hàng về giá mới
-        const io = req.app.get("socketio");
-        io.emit("priceUpdate", { productId: _id, newPrice });
-
-        return res.status(200).json(product);
-      } else {
-        // Trường hợp giá mới không thấp hơn giá cũ
-        return res
-          .status(400)
-          .json({ error: "New price should be lower than the old price." });
-      }
-    } catch (e) {
-      return res.status(400).json({ error: e.message });
     }
   },
 
@@ -266,10 +209,9 @@ const productController = {
 
       const images = req.images.map((image, index) => ({
         url: image.url,
-        isThumbnail: index === 0, // Set isThumbnail to true for the first image, false for the rest
+        isThumbnail: index === 0,
       }));
 
-      // Update the images field of the product
       await product.updateOne({ $push: { images: { $each: images } } });
 
       res.status(201).json({ ...product._doc, images });
