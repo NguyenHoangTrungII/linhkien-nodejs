@@ -96,6 +96,36 @@ const authController = {
       res.status(500).json({ error: "Lỗi khi cập nhật avatar" });
     }
   },
+  // add role (only admin allowed)
+  addRole: async (req, res) => {
+    try {
+      const { user } = req;
+      if (user.role !== "admin") {
+        return res
+          .status(403)
+          .json({ error: "Access denied. Only admins can add roles." });
+      }
+      const _id = req.params.id;
+      const allowedUpdates = ["role"];
+      const updates = Object.keys(req.body);
+      const isValidOperation = updates.every((update) =>
+        allowedUpdates.includes(update)
+      );
+      if (!isValidOperation) {
+        return res.status(400).json({ error: "Invalid update" });
+      }
+      const updatedUser = await User.findByIdAndUpdate(_id, req.body, {
+        new: true,
+      });
+      if (!updatedUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      res.status(200).json(updatedUser);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ error: "Server error" });
+    }
+  },
 };
 
 module.exports = authController;

@@ -6,9 +6,9 @@ const router = express.Router();
 
 // ADD TO CART
 router.post("/:productId", auth.user, cartController.addToCart);
-//UPDATE QUANLITY ITEM IN CART
+//UPDATE QUANTITY ITEM IN CART
 router.patch("/items/:cartItemId", auth.user, cartController.updateCartItem);
-//DELETE ITEM IN CARRT
+//DELETE ITEM IN CART
 router.delete("/items/:cartItemId", auth.user, cartController.deleteCartItem);
 // GET CART OF USER
 router.get("/me", auth.user, cartController.getCart);

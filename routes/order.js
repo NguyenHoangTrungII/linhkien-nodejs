@@ -10,6 +10,6 @@ router.post("/", auth.user, orderController.createOrder);
 router.get("/", auth.user, orderController.getAllOrders);
 
 //PATCH /orders
-router.patch("/:orderId", auth.user, orderController.cancelOrder);
+router.patch("/:orderId", auth.user || auth.admin, orderController.cancelOrder);
 
 module.exports = router;

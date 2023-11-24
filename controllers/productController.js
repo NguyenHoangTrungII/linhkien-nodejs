@@ -68,9 +68,55 @@ const productController = {
     }
   },
 
+  // getProductsByFilter: async (req, res) => {
+  //   try {
+  //     const { category, minPrice, maxPrice, brandId } = req.query;
+  //     const query = {};
+
+  //     if (category) {
+  //       query.category = category;
+  //     }
+
+  //     if (minPrice !== undefined && maxPrice !== undefined) {
+  //       query.$expr = {
+  //         $and: [
+  //           { $gte: [{ $toInt: "$price" }, parseInt(minPrice)] },
+  //           { $lte: [{ $toInt: "$price" }, parseInt(maxPrice)] },
+  //         ],
+  //       };
+  //     } else if (maxPrice !== undefined) {
+  //       query.$expr = { $lte: [{ $toInt: "$price" }, parseInt(maxPrice)] };
+  //     } else if (minPrice !== undefined) {
+  //       query.$expr = { $gte: [{ $toInt: "$price" }, parseInt(minPrice)] };
+  //     }
+
+  //     if (brandId) {
+  //       if (Array.isArray(brandId)) {
+  //         query.brand = { $in: brandId };
+  //       } else {
+  //         query.brand = brandId;
+  //       }
+  //     }
+
+  //     const products = await Product.find(query);
+
+  //     res.status(200).json(products);
+  //   } catch (error) {
+  //     console.error("Error searching products:", error);
+  //     res.status(500).json({ message: "Server Error" });
+  //   }
+  // },
+
   getProductsByFilter: async (req, res) => {
     try {
-      const { category, minPrice, maxPrice, brandId } = req.query;
+      const {
+        category,
+        minPrice,
+        maxPrice,
+        brandId,
+        page = 1,
+        limit = 8,
+      } = req.query;
       const query = {};
 
       if (category) {
@@ -98,7 +144,12 @@ const productController = {
         }
       }
 
-      const products = await Product.find(query);
+      const options = {
+        skip: (page - 1) * limit,
+        limit: parseInt(limit),
+      };
+
+      const products = await Product.find(query, null, options);
 
       res.status(200).json(products);
     } catch (error) {

@@ -12,7 +12,7 @@ router.get("/search", productController.searchProductsByName);
 router.get("/advanced-search", productController.getProductsByFilter);
 
 //GET /Create Product
-router.post("/", productController.createProduct);
+router.post("/", auth.admin, productController.createProduct);
 
 //GET /All Products
 router.get("/", productController.getAllProduct);
