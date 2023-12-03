@@ -11,6 +11,9 @@ router.post("/register", authController.registerUser);
 //POST /Login
 router.post("/login", authController.loginUser);
 
+//POST /Login
+router.post("/logout", auth.user, authController.logoutUser);
+
 //POST /Upload Image
 router.post(
   "/photo",
