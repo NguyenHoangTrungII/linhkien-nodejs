@@ -5,11 +5,13 @@
 [![](https://img.shields.io/badge/Gmail-nguyenhoangtrunghs%40gmail.com-red)](mailto:nguyenhoangtrunghs@gmail.com)
 
 ## About project
-
-RESTFIL API BY NODEJS
+RESTFUL API BY NODEJS
+``` bash
 
 You can test here : https://linhkien-nodejs-02.vercel.app/
+
 Example : https://linhkien-nodejs-02.vercel.app/v1/brand/
+```
 ## :star: Get Started
 
 ``` bash
