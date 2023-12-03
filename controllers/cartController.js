@@ -46,7 +46,11 @@ const cartController = {
         select: "name images",
       });
 
-      res.status(200).json({ cart: populatedCart });
+      const updatedProduct = populatedCart.items.find(
+        (item) => item.productId._id.toString() === productId
+      );
+
+      res.status(200).json({ updatedProduct: updatedProduct });
     } catch (error) {
       res.status(500).json({ error: "Failed to add item to cart" });
     }
@@ -106,7 +110,7 @@ const cartController = {
         (item) => item._id.toString() === cartItemId
       );
       if (cartItemIndex === -1) {
-        return res.status(404).json({ error: "Cart item not found" });
+        return res.status(404).json({ error: cart, cartItemId });
       }
 
       cart.items.splice(cartItemIndex, 1);
@@ -115,12 +119,12 @@ const cartController = {
 
       await cart.save();
 
-      const populatedCart = await Cart.findOne({ userId }).populate({
-        path: "items.productId",
-        select: "name images",
-      });
+      // const populatedCart = await Cart.findOne({ userId }).populate({
+      //   path: "items.productId",
+      //   select: "name images",
+      // });
 
-      res.status(200).json({ cart: populatedCart });
+      res.status(200).json({ itemId: cartItemId });
     } catch (error) {
       res.status(500).json({ error: "Failed to delete cart item" });
     }
