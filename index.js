@@ -6,12 +6,8 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 
-const authRoute = require("./routes/auth");
 const productRoute = require("./routes/product");
-const brandRouter = require("./routes/brand");
-const categoryRouter = require("./routes/category");
 const cartRouter = require("./routes/cart");
-const orderRouter = require("./routes/order");
 
 dotenv.config();
 
@@ -36,9 +32,5 @@ async function startServer() {
 startServer();
 
 //ROUTES
-app.use("/v1/auth", authRoute);
 app.use("/v1/product", productRoute);
-app.use("/v1/brand", brandRouter);
-app.use("/v1/category", categoryRouter);
 app.use("/v1/cart", cartRouter);
-app.use("/v1/order", orderRouter);
